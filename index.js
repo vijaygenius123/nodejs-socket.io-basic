@@ -12,12 +12,32 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index.html')
 })
 
+app.get('/javascript', (req, res) => {
+    res.sendFile(__dirname + '/public/javascript.html')
+})
+
+app.get('/css', (req, res) => {
+    res.sendFile(__dirname + '/public/css.html')
+})
+
+app.get('/python', (req, res) => {
+    res.sendFile(__dirname + '/public/python.html')
+})
+
+
 io.on('connection', (socket) => {
-    console.log('User Connected')
-    socket.emit('message', 'Hello, How Are You?');
-    socket.on('message', (event) => {
-        console.log(event)
-        socket.emit('message', event);
+
+    socket.on('join', ({ room }) => {
+        socket.join(room);
+        io.in(room).emit('message', `New User Joined ${room} Room`)
+    })
+
+    socket.on('message', ({ msg, room }) => {
+        io.in(room).emit('message', msg);
+    })
+
+    socket.on('disconnect', () => {
+        io.emit('message', 'User Disconnected');
     })
 })
 
