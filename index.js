@@ -15,8 +15,9 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('User Connected')
     socket.emit('message', 'Hello, How Are You?');
-    socket.on('another event', (event) => {
+    socket.on('message', (event) => {
         console.log(event)
+        socket.emit('message', event);
     })
 })
 
